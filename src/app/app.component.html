@@ -1,0 +1,48 @@
+<div class="container">
+  <div>
+    <h1>Personal Passphrase Generator <small>by Yannick Schwarenthorer</small></h1>
+  </div>
+
+    <!-- Answer questions part -->
+    <div class="panel panel-primary" *ngIf="!showPassword">
+        <div class="panel-heading">What is your favorite movie?</div>
+        <div class="panel-body">
+
+            <div class="row" style="margin-bottom: 10px">
+                <form class="col-md-8 col-md-offset-2" ng-submit="searchMovie(moviename)">
+                    <div class="input-group input-group-lg">
+                        <input type="text" class="form-control" [(ngModel)]="moviename" name="moviename" placeholder="Movie name">
+                    <span class="input-group-btn">
+                        <button class="btn btn-success" (click)="searchMovie(moviename)" type="button">Search</button>
+                    </span>
+                    </div>
+                </form>
+            </div>
+
+            <div class="row" class="col-md-8 col-md-offset-2" *ngFor="let movie of movies">
+
+                <img style="height: 100px; display: inline;  float: left; margin-bottom: 10px" src="https://image.tmdb.org/t/p/w185/{{movie.poster_path}}"/>
+
+                <div style="margin-left: 10px">
+                    <h4>{{movie.original_title}}</h4>
+                    <p>{{movie.overview}}</p>
+                </div>
+
+                <button (click)="chooseMovie(movie)">Choose</button>
+
+                <hr>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Show password part -->
+    <div class="row" *ngIf="showPassword">
+        <h2><button (click)="reloadPassphrase()">Reload</button>Your new passphrase:</h2>
+        <div style="margin-top: 30px" class="col-md-2" *ngFor="let term of passwordTerms">
+            <p class="text-center" style="font-size: 200%;"><b>{{term.word}}</b></p>
+            <a target="_blank" href="{{term.link}}"><img style="width: 100%;" src="https://image.tmdb.org/t/p/w185/{{term.pictureUrl}}"/></a>
+            <small>{{term.explanation}}</small>
+        </div>
+    </div>
+</div>
