@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import 'rxjs/add/operator/map';
 import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 

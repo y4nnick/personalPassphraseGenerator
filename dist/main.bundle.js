@@ -38,7 +38,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n  <div>\n    <h1>Personal Passphrase Generator <small>by Yannick Schwarenthorer</small></h1>\n  </div>\n\n    <!-- Answer questions part -->\n    <div class=\"panel panel-primary\" *ngIf=\"!showPassword\">\n        <div class=\"panel-heading\">What is your favorite movie?</div>\n        <div class=\"panel-body\">\n\n            <div class=\"row\" style=\"margin-bottom: 10px\">\n                <form class=\"col-md-8 col-md-offset-2\" ng-submit=\"searchMovie(moviename)\">\n                    <div class=\"input-group input-group-lg\">\n                        <input type=\"text\" class=\"form-control\" [(ngModel)]=\"moviename\" name=\"moviename\" placeholder=\"Movie name\">\n                    <span class=\"input-group-btn\">\n                        <button class=\"btn btn-success\" (click)=\"searchMovie(moviename)\" type=\"button\">Search</button>\n                    </span>\n                    </div>\n                </form>\n            </div>\n\n            <div class=\"row\" class=\"col-md-8 col-md-offset-2\" *ngFor=\"let movie of movies\">\n\n                <img style=\"height: 100px; display: inline;  float: left; margin-bottom: 10px\" src=\"https://image.tmdb.org/t/p/w185/{{movie.poster_path}}\"/>\n\n                <div style=\"margin-left: 10px\">\n                    <h4>{{movie.original_title}}</h4>\n                    <p>{{movie.overview}}</p>\n                </div>\n\n                <button (click)=\"chooseMovie(movie)\">Choose</button>\n\n                <hr>\n            </div>\n\n        </div>\n    </div>\n\n    <!-- Show password part -->\n    <div class=\"row\" *ngIf=\"showPassword\">\n        <h2><button (click)=\"reloadPassphrase()\">Reload</button>Your new passphrase:</h2>\n        <div style=\"margin-top: 30px\" class=\"col-md-2\" *ngFor=\"let term of passwordTerms\">\n            <p class=\"text-center\" style=\"font-size: 200%;\"><b>{{term.word}}</b></p>\n            <a target=\"_blank\" href=\"{{term.link}}\"><img style=\"width: 100%;\" src=\"https://image.tmdb.org/t/p/w185/{{term.pictureUrl}}\"/></a>\n            <small>{{term.explanation}}</small>\n        </div>\n    </div>\n</div>"
+module.exports = "<div class=\"container\">\n  <div>\n    <h1>Personal Passphrase Generator <small>by Yannick Schwarenthorer</small></h1>\n  </div>\n\n    <!-- Answer questions part -->\n    <div class=\"panel panel-primary\" *ngIf=\"!passwordTerms || passwordTerms.length == 0\">\n        <div class=\"panel-heading\">What is your favorite movie?</div>\n        <div class=\"panel-body\">\n\n            <div class=\"row\" style=\"margin-bottom: 10px\">\n                <form class=\"col-md-8 col-md-offset-2\">\n                    <div class=\"input-group input-group-lg\">\n                        <input type=\"text\" class=\"form-control\" (keyup.enter)=\"searchMovies(moviename)\" [(ngModel)]=\"moviename\" name=\"moviename\" placeholder=\"Movie name\">\n                    <span class=\"input-group-btn\">\n                        <button class=\"btn btn-success\" (click)=\"searchMovies(moviename)\" type=\"button\">Search</button>\n                    </span>\n                    </div>\n                </form>\n            </div>\n\n            <div class=\"row\" class=\"col-md-8 col-md-offset-2\" *ngFor=\"let movie of movies\">\n\n                <div style=\"display: block\">\n                    <img *ngIf=\"movie.poster_path\" style=\"height: 110px; display: inline;  float: left; margin-bottom: 15px; margin-right: 15px\" src=\"https://image.tmdb.org/t/p/w185/{{movie.poster_path}}\"/>\n\n                    <div style=\"margin-left: 10px;display: block\">\n                        <h4>{{movie.original_title}}</h4>\n                        <p>{{movie.overview}}</p>\n                    </div>\n                </div>\n\n                <button (click)=\"chooseMovie(movie)\" class=\"btn\">Choose</button>\n\n                <hr>\n            </div>\n\n        </div>\n    </div>\n\n    <!-- Show password part -->\n    <div class=\"row\" *ngIf=\"passwordTerms && passwordTerms.length != 0\">\n        <h2><button (click)=\"reloadPassphrase()\">Reload </button>Your new passphrase:</h2>\n        <div style=\"margin-top: 30px\" class=\"col-md-2\" *ngFor=\"let term of passwordTerms\">\n            <p class=\"text-center\" style=\"font-size: 200%;\"><b>{{term.word}}</b></p>\n            <a target=\"_blank\" href=\"{{term.link}}\"><img  *ngIf=\"term.pictureUrl\" style=\"width: 100%;\" src=\"https://image.tmdb.org/t/p/w185/{{term.pictureUrl}}\"/></a>\n            <small>{{term.explanation}}</small>\n        </div>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -48,10 +48,8 @@ module.exports = "<div class=\"container\">\n  <div>\n    <h1>Personal Passphras
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/add/operator/map.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_map__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__effwordlist__ = __webpack_require__("../../../../../src/app/effwordlist.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__service_passphraseManager_passphrase_manager_service__ = __webpack_require__("../../../../../src/app/service/passphraseManager/passphrase-manager.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__service_theMovieDatabase_themoviedatabase_service__ = __webpack_require__("../../../../../src/app/service/theMovieDatabase/themoviedatabase.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -64,99 +62,41 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
-var Term = (function () {
-    function Term(word, explanation, pictureUrl, personID) {
-        this.explanation = explanation;
-        this.word = word.toLowerCase();
-        this.pictureUrl = pictureUrl;
-        this.personID = personID;
-        this.link = "https://www.themoviedb.org/person/" + personID;
-    }
-    return Term;
-}());
 var AppComponent = (function () {
-    function AppComponent(http) {
-        this.http = http;
-        this.moviename = "";
+    function AppComponent(theMoviedatabaseService, passphraseManagerService) {
+        this.theMoviedatabaseService = theMoviedatabaseService;
+        this.passphraseManagerService = passphraseManagerService;
         this.movies = [];
-        this.termList = [];
-        this.showPassword = false;
-        console.log(__WEBPACK_IMPORTED_MODULE_3__effwordlist__["a" /* default */]);
     }
-    AppComponent.prototype.chooseMovie = function (movie) {
-        console.log("choosen " + movie.original_title);
-        this.searchActors(movie);
-    };
-    /**
-     * Searches for the actors of a given movie
-     * @param movie for which the actors should be searched
-     */
-    AppComponent.prototype.searchActors = function (movie) {
+    AppComponent.prototype.searchMovies = function (query) {
         var _this = this;
-        var params = new __WEBPACK_IMPORTED_MODULE_2__angular_http__["c" /* URLSearchParams */]();
-        params.set('api_key', "6f899ff3bacaa53f5433271c891ba336");
-        return this.http.get('https://api.themoviedb.org/3/movie/' + movie.id + '/credits', { search: params })
-            .map(function (res) { return res.json(); })
-            .subscribe(function (res) {
-            console.log("Actors:");
-            console.log(res);
-            for (var i = 0; i < 15; i++) {
-                var actor = res.cast[i];
-                if (actor && actor.character) {
-                    //Split name
-                    for (var _i = 0, _a = actor.character.split(" "); _i < _a.length; _i++) {
-                        var word = _a[_i];
-                        var term = new Term(word, actor.character + " in '" + movie.original_title + "' played by " + actor.name + ".", actor.profile_path, actor.id);
-                        _this.termList.push(term);
-                    }
-                }
+        this.theMoviedatabaseService.searchMovie(query).subscribe(function (movies) {
+            _this.movies = movies;
+        }, function (err) {
+            if (err.error instanceof Error) {
+                console.log('An error occurred:', err.error.message);
             }
-            console.log(_this.termList);
-            _this.showPassphraseFromTerms();
+            else {
+                console.log("Backend returned code " + err.status + ", body was: " + err.error);
+            }
         });
     };
-    /**
-     * Searches for a movie with the given searchterm
-     * @param searchterm The term for searching
-     * @returns {any}
-     */
-    AppComponent.prototype.searchMovie = function (searchterm) {
+    AppComponent.prototype.chooseMovie = function (movie) {
         var _this = this;
-        var params = new __WEBPACK_IMPORTED_MODULE_2__angular_http__["c" /* URLSearchParams */]();
-        params.set('query', this.moviename);
-        params.set('api_key', "6f899ff3bacaa53f5433271c891ba336");
-        return this.http.get('https://api.themoviedb.org/3/search/movie', { search: params })
-            .map(function (res) { return res.json(); })
-            .subscribe(function (res) {
-            console.log(res);
-            _this.movies = res.results;
+        this.theMoviedatabaseService.searchActors(movie).subscribe(function (terms) {
+            _this.passphraseManagerService.addTerms(terms);
+            _this.reloadPassphrase();
+        }, function (err) {
+            if (err.error instanceof Error) {
+                console.log('An error occurred:', err.error.message);
+            }
+            else {
+                console.log("Backend returned code " + err.status + ", body was: " + err.error);
+            }
         });
-    };
-    AppComponent.prototype.diceRoll = function (times) {
-        var result = "";
-        for (var y = 0; y < times; y++) {
-            var randomNumber = Math.floor(Math.random() * 6) + 1;
-            result += String(randomNumber);
-        }
-        return result;
-    };
-    AppComponent.prototype.showPassphraseFromTerms = function () {
-        //Add random words from eff list
-        for (var y = 0; y < 25; y++) {
-            var roll = this.diceRoll(5);
-            var t = new Term(__WEBPACK_IMPORTED_MODULE_3__effwordlist__["a" /* default */][roll], "Word from the english dictionary.");
-            this.termList.push(t);
-        }
-        this.reloadPassphrase();
     };
     AppComponent.prototype.reloadPassphrase = function () {
-        this.passwordTerms = [];
-        for (var x = 0; x < 6; x++) {
-            var rand = this.termList[Math.floor(Math.random() * this.termList.length)];
-            this.passwordTerms.push(rand);
-        }
-        this.showPassword = true;
+        this.passwordTerms = this.passphraseManagerService.getNewPassphrase(true);
     };
     return AppComponent;
 }());
@@ -164,12 +104,13 @@ AppComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
         selector: 'app-root',
         template: __webpack_require__("../../../../../src/app/app.component.html"),
+        providers: [__WEBPACK_IMPORTED_MODULE_2__service_theMovieDatabase_themoviedatabase_service__["a" /* TheMovieDatabaseService */], __WEBPACK_IMPORTED_MODULE_1__service_passphraseManager_passphrase_manager_service__["a" /* PassphraseManagerService */]],
         styles: [__webpack_require__("../../../../../src/app/app.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__angular_http__["a" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_http__["a" /* Http */]) === "function" && _a || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__service_theMovieDatabase_themoviedatabase_service__["a" /* TheMovieDatabaseService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__service_theMovieDatabase_themoviedatabase_service__["a" /* TheMovieDatabaseService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__service_passphraseManager_passphrase_manager_service__["a" /* PassphraseManagerService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__service_passphraseManager_passphrase_manager_service__["a" /* PassphraseManagerService */]) === "function" && _b || Object])
 ], AppComponent);
 
-var _a;
+var _a, _b;
 //# sourceMappingURL=app.component.js.map
 
 /***/ }),
@@ -181,15 +122,18 @@ var _a;
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__ = __webpack_require__("../../../platform-browser/@angular/platform-browser.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_forms__ = __webpack_require__("../../../forms/@angular/forms.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__app_component__ = __webpack_require__("../../../../../src/app/app.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/add/operator/map.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_forms__ = __webpack_require__("../../../forms/@angular/forms.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__app_component__ = __webpack_require__("../../../../../src/app/app.component.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -203,13 +147,13 @@ var AppModule = (function () {
 AppModule = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["L" /* NgModule */])({
         declarations: [
-            __WEBPACK_IMPORTED_MODULE_4__app_component__["a" /* AppComponent */]
+            __WEBPACK_IMPORTED_MODULE_5__app_component__["a" /* AppComponent */]
         ],
         imports: [
-            __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */], __WEBPACK_IMPORTED_MODULE_2__angular_http__["b" /* HttpModule */], __WEBPACK_IMPORTED_MODULE_3__angular_forms__["a" /* FormsModule */]
+            __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */], __WEBPACK_IMPORTED_MODULE_3__angular_http__["b" /* HttpModule */], __WEBPACK_IMPORTED_MODULE_4__angular_forms__["a" /* FormsModule */]
         ],
         providers: [],
-        bootstrap: [__WEBPACK_IMPORTED_MODULE_4__app_component__["a" /* AppComponent */]]
+        bootstrap: [__WEBPACK_IMPORTED_MODULE_5__app_component__["a" /* AppComponent */]]
     })
 ], AppModule);
 
@@ -8001,6 +7945,200 @@ var efflist = {
 };
 /* harmony default export */ __webpack_exports__["a"] = (efflist);
 //# sourceMappingURL=effwordlist.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/model/term.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Term; });
+var Term = (function () {
+    function Term(word, explanation, pictureUrl, personID) {
+        this.explanation = explanation;
+        this.word = word.toLowerCase();
+        this.pictureUrl = pictureUrl;
+        this.personID = personID;
+        this.link = "https://www.themoviedb.org/person/" + personID;
+    }
+    return Term;
+}());
+
+//# sourceMappingURL=term.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/service/passphraseManager/passphrase-manager.service.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PassphraseManagerService; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__model_term__ = __webpack_require__("../../../../../src/app/model/term.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__effwordlist__ = __webpack_require__("../../../../../src/app/effwordlist.ts");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var PassphraseManagerService = (function () {
+    function PassphraseManagerService() {
+        this.passPhraseLength = 6;
+        //List of all found Terms
+        this.termList = [];
+    }
+    /**
+     * Adds the given terms to the list of all terms
+     * @param terms the terms which should be added
+     */
+    PassphraseManagerService.prototype.addTerms = function (terms) {
+        this.termList = this.termList.concat(terms);
+    };
+    /**
+     *
+     * before generating a new passphrase random dictionary words are getting added to the termlist
+     * @returns {Array} the new passphrase
+     */
+    /**
+     * Delivers a new random Passphrase from all the password terms,
+     * @param addDictionaryWords true if random dictionary words should be added to the termlist, default true
+     * @returns {Array<Term>} the new passphrase
+     */
+    PassphraseManagerService.prototype.getNewPassphrase = function (addDictionaryWords) {
+        var tempTermList = [];
+        tempTermList = tempTermList.concat(this.termList);
+        if (addDictionaryWords) {
+            //Add as much random words from the eff-list as terms in the list
+            for (var y = 0; y < this.termList.length; y++) {
+                var roll = this.diceRoll(5);
+                var t = new __WEBPACK_IMPORTED_MODULE_1__model_term__["a" /* Term */](__WEBPACK_IMPORTED_MODULE_2__effwordlist__["a" /* default */][roll], "Word from the english dictionary.");
+                tempTermList.push(t);
+            }
+        }
+        var passwordTerms = [];
+        for (var x = 0; x < this.passPhraseLength; x++) {
+            var index = Math.floor(Math.random() * tempTermList.length);
+            var rand = tempTermList[index];
+            passwordTerms.push(rand);
+            //Delete element from array to prevent duplicates
+            tempTermList.splice(index, 1);
+        }
+        return passwordTerms;
+    };
+    /**
+     * Simulates dicerolls with a 6 sided dice
+     * @param times how often the dice should be rolled
+     * @returns {string} the result in the format <firstResult><secondResult>..., e.g. 453231
+     */
+    PassphraseManagerService.prototype.diceRoll = function (times) {
+        var result = "";
+        for (var y = 0; y < times; y++) {
+            var randomNumber = Math.floor(Math.random() * 6) + 1;
+            result += String(randomNumber);
+        }
+        return result;
+    };
+    return PassphraseManagerService;
+}());
+PassphraseManagerService = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["B" /* Injectable */])(),
+    __metadata("design:paramtypes", [])
+], PassphraseManagerService);
+
+//# sourceMappingURL=passphrase-manager.service.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/service/theMovieDatabase/themoviedatabase.service.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TheMovieDatabaseService; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__model_term__ = __webpack_require__("../../../../../src/app/model/term.ts");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var TheMovieDatabaseService = (function () {
+    function TheMovieDatabaseService(http) {
+        this.http = http;
+        //API-KEY for www.themoviedb.org
+        this.API_KEY = "6f899ff3bacaa53f5433271c891ba336";
+    }
+    /**
+     * Searches for a movie with the given searchterm
+     * @param searchterm The term for searching
+     * @returns Observable<any> an obersvable with the found movies as result
+     */
+    TheMovieDatabaseService.prototype.searchMovie = function (searchterm) {
+        var params = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["c" /* URLSearchParams */]();
+        params.set('query', searchterm);
+        params.set('api_key', this.API_KEY);
+        return this.http.get('https://api.themoviedb.org/3/search/movie', { search: params })
+            .map(function (res) {
+            return res.json().results;
+        });
+    };
+    /**
+     * Searches for the actors of a given movie
+     * @param movie movie for which the actors should be searched
+     * @returns Observable<Term[]> an observable with the found terms as result
+     */
+    TheMovieDatabaseService.prototype.searchActors = function (movie) {
+        var params = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["c" /* URLSearchParams */]();
+        params.set('api_key', this.API_KEY);
+        var terms = [];
+        return this.http.get('https://api.themoviedb.org/3/movie/' + movie.id + '/credits', { search: params })
+            .map(function (res) {
+            res = res.json();
+            //Take the 15 most relevant actors only
+            for (var i = 0; i < 15; i++) {
+                var actor = res.cast[i];
+                if (actor && actor.character) {
+                    //Split name
+                    for (var _i = 0, _a = actor.character.split(" "); _i < _a.length; _i++) {
+                        var word = _a[_i];
+                        //Prevent special actors like '(voice)' and omit words with only 1 character
+                        if (word.substring(0, 1) == "(" || word.length <= 1) {
+                            continue;
+                        }
+                        //Remove , and ' from the words
+                        word = word.replace(/,/g, "");
+                        word = word.replace(/'/g, "");
+                        var term = new __WEBPACK_IMPORTED_MODULE_2__model_term__["a" /* Term */](word, actor.character + " in '" + movie.original_title + "' played by " + actor.name + ".", actor.profile_path, actor.id);
+                        terms.push(term);
+                    }
+                }
+            }
+            return terms;
+        });
+    };
+    return TheMovieDatabaseService;
+}());
+TheMovieDatabaseService = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["B" /* Injectable */])(),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Http */]) === "function" && _a || Object])
+], TheMovieDatabaseService);
+
+var _a;
+//# sourceMappingURL=themoviedatabase.service.js.map
 
 /***/ }),
 
